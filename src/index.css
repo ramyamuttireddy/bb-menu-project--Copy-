@@ -1,0 +1,41 @@
+/* ⭐ GOOGLE FONT */
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+/* ===== GLOBAL SCROLLBAR HIDE ===== */
+
+/* Chrome, Safari, Edge */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* IE / old Edge */
+* {
+  -ms-overflow-style: none;
+}
+
+body{
+  background: linear-gradient(
+    135deg,
+    #fdf4ec 0%,
+    #f6e5d4 50%,
+    #f1d7c0 100%
+  );
+  font-family: 'Poppins', sans-serif;
+}
+
+.hide-scroll::-webkit-scrollbar{
+  display:none;
+}
