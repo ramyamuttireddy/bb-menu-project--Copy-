@@ -60,7 +60,7 @@ function MenuItems({
       {items.map((item) => {
 
         const itemOff =
-          item?.Unavailable === true;
+          item?.unavailable === true;
 
         const isDisabled =
           categoryOff || itemOff;
@@ -109,7 +109,7 @@ function MenuItems({
                 sm:h-[200px]
                 md:h-[220px]
                 lg:h-[240px]
-                xl:h-[260px]
+                xl:h-[350px]
                 object-cover
                 "
               />
@@ -132,7 +132,7 @@ function MenuItems({
               </h3>
 
               <p className="text-green-700 font-bold mt-1 text-sm sm:text-base">
-                ₹{item.price}
+                ${item.price}
               </p>
 
             </div>

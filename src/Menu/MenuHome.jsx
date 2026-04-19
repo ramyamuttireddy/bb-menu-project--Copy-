@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import useCategory from "./useCategory";
 import { slugify } from "../Utilis/slugify";
 import pb from "../API/api";
+import BackButton from "../BackArrow/BackButton";
 
 function MenuHome() {
   const categories = useCategory();
@@ -10,6 +11,7 @@ function MenuHome() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8f1e7] to-[#efe2d1] p-6 font-body">
+      <BackButton />
 
       {/* Page Title */}
       {/* <h1 className="text-3xl md:text-4xl font-bold text-center text-[#7a4b18] mb-10 tracking-wide">

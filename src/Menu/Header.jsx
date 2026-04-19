@@ -4,9 +4,15 @@ function Header() {
   const navigate = useNavigate();
 
   return (
-    <header className="w-full bg-[#728D3E] border-b-2 border-white shadow-2xl">
+    <header className="
+      w-full 
+      bg-[#728D3E] 
+      border-b-2 border-white 
+      shadow-2xl
+      sticky top-0 z-50
+    ">
 
-      <div className="max-w-7xl mx-auto flex flex-col items-center py-6">
+      <div className="max-w-7xl mx-auto flex flex-col items-center py-4">
 
         {/* Logo Section */}
         <div
@@ -16,7 +22,7 @@ function Header() {
           <img
             src="/assets/Logo.png"
             alt="Bharat Bhavan"
-            className="h-16 md:h-20 object-contain"
+            className="w-[65%] h-[65%] object-contain"
           />
         </div>
 

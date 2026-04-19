@@ -1,0 +1,10 @@
+{
+  "appId": "com.irving.app",
+  "appName": "irving-menu",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    }
+  }
+}
