@@ -27,11 +27,11 @@ function Mainslider() {
   return (
     <div
       className="
-        w-full 
-        h-[50vh] 
-        sm:h-[55vh] 
-        md:h-[60vh] 
-        lg:h-[80vh] 
+        w-full
+        h-[50vh]
+        sm:h-[55vh]
+        md:h-[60vh]
+        lg:h-[80vh]
         xl:h-[90vh]
         relative
         overflow-hidden

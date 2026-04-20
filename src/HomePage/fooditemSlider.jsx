@@ -77,7 +77,7 @@ function FooditemSlider() {
               <div className="absolute inset-0 bg-black/30"></div>
 
               {/* TEXT BOX */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 
+              <div className="absolute top-0 left-1/2 -translate-x-1/2
               bg-black/40 backdrop-blur-md px-6 py-4  text-white text-center w-[100%]">
 
                 <h2 className="text-xl md:text-2xl font-bold">
@@ -90,7 +90,7 @@ function FooditemSlider() {
               </div>
 
               {/* BADGE */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2
               bg-black/40 backdrop-blur-md px-6 py-4  text-white text-center w-[100%] text-xl md:text-2xl font-bold">
                 New Additions
               </div>

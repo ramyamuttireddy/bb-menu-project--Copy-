@@ -40,10 +40,10 @@ const ExploreDishes = () => {
           relative w-full cursor-pointer group overflow-hidden
 
           /* MOBILE */
-          h-[35vh] 
+          h-[35vh]
 
           /* TABLET */
-          sm:h-[40vh] md:h-[45vh] 
+          sm:h-[40vh] md:h-[45vh]
 
           /* DESKTOP */
           lg:h-1/2
@@ -57,11 +57,11 @@ const ExploreDishes = () => {
         <div className="absolute inset-0 bg-black/30"></div>
 
         {/* TEXT */}
-        <div className="absolute bottom-0 w-full 
+        <div className="absolute bottom-0 w-full
         bg-black/40 backdrop-blur-md px-4 sm:px-6 py-3 sm:py-4 text-white text-center">
 
           <h2 className="
-            text-lg sm:text-xl md:text-xl lg:text-xl xl:text-3xl 
+            text-lg sm:text-xl md:text-xl lg:text-xl xl:text-3xl
             font-bold
           ">
             {signatureDish.name}
@@ -78,8 +78,8 @@ const ExploreDishes = () => {
         className="
           relative w-full cursor-pointer group overflow-hidden
 
-          h-[35vh] 
-          sm:h-[40vh] md:h-[45vh] 
+          h-[35vh]
+          sm:h-[40vh] md:h-[45vh]
           lg:h-1/2
         "
       >
@@ -90,18 +90,18 @@ const ExploreDishes = () => {
 
         <div className="absolute inset-0 bg-black/30"></div>
 
-        <div className="absolute bottom-0 w-full 
+        <div className="absolute bottom-0 w-full
         bg-black/40 backdrop-blur-md px-4 sm:px-6 py-3 sm:py-4 text-white text-center">
 
           <h2 className="
-            text-lg sm:text-xl md:text-xl lg:text-xl xl:text-3xl 
+            text-lg sm:text-xl md:text-xl lg:text-xl xl:text-3xl
             font-bold
           ">
             {exploreMenu.name}
           </h2>
         </div>
 
-       
+
       </div>
 
     </div>
