@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Header from "./Menu/Header";
@@ -20,34 +20,30 @@ function App() {
   useEffect(() => {
     if (!backgroundImage) return;
 
-    // 🔥 Delay before showing loader (avoid flicker)
     const timer = setTimeout(() => {
       setShowLoader(true);
-    }, 400); // 👈 only show if slow
+    }, 400);
 
     const img = new Image();
     img.src = backgroundImage;
 
     img.onload = () => {
-      clearTimeout(timer);     // stop showing loader
-      setLoading(false);       // done loading
-      setShowLoader(false);    // hide loader
+      clearTimeout(timer);
+      setLoading(false);
+      setShowLoader(false);
     };
 
     return () => clearTimeout(timer);
   }, [backgroundImage]);
 
-    useEffect(() => {
-    refreshAuth(); // 🔥 app start lo token refresh
+  useEffect(() => {
+    refreshAuth();
   }, []);
 
   return (
     <div className="relative min-h-screen">
-
-      {/* ✅ SMART LOADER */}
       {loading && showLoader && <Preloader />}
 
-      {/* Background */}
       {backgroundImage && (
         <div
           className="fixed inset-0 -z-10 bg-cover bg-center"
@@ -57,8 +53,9 @@ function App() {
 
       <div className="fixed inset-0 -z-10 bg-black/40" />
 
-      <BrowserRouter>
-       <ScrollToTop /> 
+      {/* ✅ HASH ROUTER */}
+      <HashRouter>
+        <ScrollToTop />
         <Header />
 
         <Routes>
@@ -66,7 +63,7 @@ function App() {
           <Route path="/menu-home" element={<MenuHome />} />
           <Route path="/menu/:categorySlug" element={<Menu />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }
