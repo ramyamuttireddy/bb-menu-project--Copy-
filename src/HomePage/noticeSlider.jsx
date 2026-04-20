@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import pb from "../API/api";
-import { cachedRequest } from "../API/cache";
+import pb, { safeRequest, cache } from "../API/api"; // ✅ FIX
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
@@ -12,10 +11,21 @@ function NoticeSlider() {
   useEffect(() => {
     async function fetchNotices() {
       try {
-        const res = await cachedRequest("notices", () =>
-          pb.collection("notices").getFullList({ sort: "-created" })
+        // ✅ CACHE CHECK
+        if (cache.notices) {
+          setNotices(cache.notices);
+          return;
+        }
+
+        const res = await safeRequest(() =>
+          pb.collection("notices").getFullList({
+            sort: "-created",
+          })
         );
+
+        cache.notices = res; // ✅ SAVE CACHE
         setNotices(res);
+
       } catch (error) {
         console.error(error);
       }
@@ -38,9 +48,9 @@ function NoticeSlider() {
           className="w-full h-full"
         >
           {notices.map((item) => (
-            <SwiperSlide key={item.id} className="flex items-center justify-center ">
+            <SwiperSlide key={item.id} className="flex items-center justify-center">
 
-              <p className="text-center text-sm md:text-center font-medium text-gray-700 leading-relaxed w-full">
+              <p className="text-center text-sm font-medium text-gray-700 leading-relaxed w-full">
                 {typeof item.content === "string"
                   ? item.content
                   : item.content?.text ||

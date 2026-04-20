@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import pb, { safeRequest } from "../API/api";
-import { cachedRequest } from "../API/cache";
+import pb, { safeRequest, cache } from "../API/api";
 
 export default function useMenu(categoryId, subCategoryId) {
   const [items, setItems] = useState([]);
@@ -11,29 +10,34 @@ export default function useMenu(categoryId, subCategoryId) {
 
     let ignore = false;
 
+    const key = `${categoryId}-${subCategoryId || "all"}`;
+
     const load = async () => {
       try {
         setLoading(true);
 
-        let filter = `categoryId="${categoryId}"`;
+        // ✅ CACHE CHECK
+        if (cache.menu[key]) {
+          setItems(cache.menu[key]);
+          setLoading(false);
+          return;
+        }
 
+        let filter = `categoryId="${categoryId}"`;
         if (subCategoryId) {
           filter += ` && subCategoryId="${subCategoryId}"`;
         }
 
-        const cacheKey = `menu_${categoryId}_${subCategoryId || "all"}`;
-
-        const res = await cachedRequest(cacheKey, () =>
-          safeRequest(() =>
-            pb.collection("food_item").getList(1, 50, {
-              filter,
-              sort: "order",
-            })
-          )
+        const res = await safeRequest(() =>
+          pb.collection("food_item").getFullList({
+            filter,
+            sort: "order",
+          })
         );
 
         if (!ignore) {
-          setItems(res.items);
+          cache.menu[key] = res; // 🔥 SAVE CACHE
+          setItems(res);
         }
 
       } catch (err) {

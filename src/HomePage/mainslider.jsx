@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import pb from "../API/api";
-import { cachedRequest } from "../API/cache";
+import pb, { safeRequest, cache } from "../API/api"; // ✅ FIX
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
@@ -12,12 +11,23 @@ function Mainslider() {
   useEffect(() => {
     async function fetchImages() {
       try {
-        const res = await cachedRequest("restaurant_images", () =>
-          pb.collection("restaurant_images").getFullList({ sort: "-created" })
+        // ✅ CACHE
+        if (cache.images) {
+          setImages(cache.images);
+          return;
+        }
+
+        const res = await safeRequest(() =>
+          pb.collection("restaurant_images").getList(1, 20, {
+            sort: "-created",
+          })
         );
-        setImages(res);
+
+        cache.images = res.items; // ✅ FIX
+        setImages(res.items);
+
       } catch (error) {
-        console.error("Error fetching images:", error);
+        console.error(error);
       }
     }
 
@@ -25,26 +35,14 @@ function Mainslider() {
   }, []);
 
   return (
-    <div
-      className="
-        w-full
-        h-[50vh]
-        sm:h-[55vh]
-        md:h-[60vh]
-        lg:h-[80vh]
-        xl:h-[90vh]
-        relative
-        overflow-hidden
-      "
-    >
-      {/* 🔥 SHOW LOADER WHILE LOADING */}
+    <div className="w-full h-[50vh] sm:h-[55vh] md:h-[60vh] lg:h-[80vh] xl:h-[90vh] relative overflow-hidden">
+
       {images.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/20">
           <p className="text-white animate-pulse">Loading...</p>
         </div>
       )}
 
-      {/* 🔥 ONLY RENDER SWIPER WHEN READY */}
       {images.length > 0 && (
         <Swiper
           modules={[Autoplay]}
@@ -58,7 +56,7 @@ function Mainslider() {
               <div className="w-full h-full relative">
 
                 <img
-                  src={pb.files.getURL(item, item.images)}
+                  src={pb.files.getUrl(item, item.images)} // ✅ FIX
                   alt="restaurant"
                   className="w-full h-full object-cover"
                 />
@@ -70,6 +68,7 @@ function Mainslider() {
           ))}
         </Swiper>
       )}
+
     </div>
   );
 }
