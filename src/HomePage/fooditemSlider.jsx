@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Autoplay, Navigation } from "swiper/modules";
-import pb, { safeRequest } from "../API/api"; // ✅ FIX
+import pb, { safeRequest } from "../API/api";
+import { cachedRequest } from "../API/cache";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -16,15 +17,16 @@ function FooditemSlider() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await safeRequest(() =>
-          pb.collection("food_item").getList(1, 20, { // ✅ FIX
-            filter: "new_addition=true",
-            sort: "-created",
-            expand: "categoryId",
-          })
+        const res = await cachedRequest("new_food_items", () =>
+          safeRequest(() =>
+            pb.collection("food_item").getList(1, 20, {
+              filter: "new_addition=true",
+              sort: "-created",
+              expand: "categoryId",
+            })
+          )
         );
-
-        setItems(res.items); // ✅ FIX
+        setItems(res.items);
 
       } catch (err) {
         console.error(err);

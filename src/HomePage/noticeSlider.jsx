@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import pb, { safeRequest, cache } from "../API/api"; // ✅ FIX
+import pb, { safeRequest } from "../API/api";
+import { cachedRequest } from "../API/cache";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
@@ -11,19 +12,13 @@ function NoticeSlider() {
   useEffect(() => {
     async function fetchNotices() {
       try {
-        // ✅ CACHE CHECK
-        if (cache.notices) {
-          setNotices(cache.notices);
-          return;
-        }
-
-        const res = await safeRequest(() =>
-          pb.collection("notices").getFullList({
-            sort: "-created",
-          })
+        const res = await cachedRequest("notices", () =>
+          safeRequest(() =>
+            pb.collection("notices").getFullList({
+              sort: "-created",
+            })
+          )
         );
-
-        cache.notices = res; // ✅ SAVE CACHE
         setNotices(res);
 
       } catch (error) {

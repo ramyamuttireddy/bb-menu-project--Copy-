@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import pb, { safeRequest, cache } from "../API/api";
+import pb, { safeRequest } from "../API/api";
+import { cachedRequest } from "../API/cache";
 
 export default function useCategory() {
   const [categories, setCategories] = useState([]);
@@ -7,19 +8,16 @@ export default function useCategory() {
   useEffect(() => {
     const load = async () => {
       try {
-
-        // ✅ GLOBAL CACHE
-        if (cache.categories) {
-          setCategories(cache.categories);
-          return;
-        }
-
         const [catRes, subRes] = await Promise.all([
-          safeRequest(() =>
-            pb.collection("category").getFullList()
+          cachedRequest("categories_list", () =>
+            safeRequest(() =>
+              pb.collection("category").getFullList({ sort: "order" })
+            )
           ),
-          safeRequest(() =>
-            pb.collection("sub_category").getFullList()
+          cachedRequest("subcategories_list", () =>
+            safeRequest(() =>
+              pb.collection("sub_category").getFullList({ sort: "order" })
+            )
           ),
         ]);
 
@@ -28,7 +26,6 @@ export default function useCategory() {
           subs: subRes.filter((s) => s.categoryId === c.id),
         }));
 
-        cache.categories = merged; // 🔥 SAVE CACHE
         setCategories(merged);
 
       } catch (err) {

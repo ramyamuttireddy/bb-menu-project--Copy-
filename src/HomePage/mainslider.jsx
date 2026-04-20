@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import pb, { safeRequest, cache } from "../API/api"; // ✅ FIX
+import pb, { safeRequest } from "../API/api";
+import { cachedRequest } from "../API/cache";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
@@ -11,19 +12,13 @@ function Mainslider() {
   useEffect(() => {
     async function fetchImages() {
       try {
-        // ✅ CACHE
-        if (cache.images) {
-          setImages(cache.images);
-          return;
-        }
-
-        const res = await safeRequest(() =>
-          pb.collection("restaurant_images").getList(1, 20, {
-            sort: "-created",
-          })
+        const res = await cachedRequest("restaurant_images", () =>
+          safeRequest(() =>
+            pb.collection("restaurant_images").getList(1, 20, {
+              sort: "-created",
+            })
+          )
         );
-
-        cache.images = res.items; // ✅ FIX
         setImages(res.items);
 
       } catch (error) {

@@ -1,4 +1,5 @@
-import pb, { safeRequest } from "../API/api"; // ✅ FIX
+import pb, { safeRequest } from "../API/api";
+import { cachedRequest } from "../API/cache";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,11 +12,15 @@ const ExploreDishes = () => {
     async function fetchMenu() {
       try {
         const [signature, explore] = await Promise.all([
-          safeRequest(() =>
-            pb.collection("signature_images").getOne("bakxdec5r2k5ikz")
+          cachedRequest("signature_dish", () =>
+            safeRequest(() =>
+              pb.collection("signature_images").getOne("bakxdec5r2k5ikz")
+            )
           ),
-          safeRequest(() =>
-            pb.collection("signature_images").getOne("1egp64vjdjll5p9")
+          cachedRequest("explore_menu", () =>
+            safeRequest(() =>
+              pb.collection("signature_images").getOne("1egp64vjdjll5p9")
+            )
           ),
         ]);
 
