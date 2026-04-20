@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Autoplay, Navigation } from "swiper/modules";
-import pb from "../API/api";
+import pb, { safeRequest } from "../API/api"; // ✅ FIX
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -16,18 +16,23 @@ function FooditemSlider() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await pb.collection("food_item").getFullList({
-          filter: "new_addition=true",
-          sort: "-created",
-          expand: "categoryId",
-        });
-        setItems(res);
+        const res = await safeRequest(() =>
+          pb.collection("food_item").getList(1, 20, { // ✅ FIX
+            filter: "new_addition=true",
+            sort: "-created",
+            expand: "categoryId",
+          })
+        );
+
+        setItems(res.items); // ✅ FIX
+
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
       }
     }
+
     fetchData();
   }, []);
 
@@ -42,7 +47,6 @@ function FooditemSlider() {
   return (
     <div className="relative w-full h-full">
 
-      {/* ARROWS */}
       <div className="swiper-button-prev !text-white z-20"></div>
       <div className="swiper-button-next !text-white z-20"></div>
 
@@ -66,31 +70,25 @@ function FooditemSlider() {
               className="relative w-full h-full cursor-pointer group"
             >
               <img
-                src={pb.files.getURL(item, item.image)}
+                src={pb.files.getUrl(item, item.image)} // ✅ FIX
                 className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
               />
 
-              {/* LIGHT OVERLAY */}
               <div className="absolute inset-0 bg-black/30"></div>
 
-              {/* TEXT BOX */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 
-              bg-black/40 backdrop-blur-md px-6 py-4  text-white text-center w-[100%]">
+              bg-black/40 backdrop-blur-md px-6 py-4 text-white text-center w-full">
 
                 <h2 className="text-xl md:text-2xl font-bold">
                   {item.name}
                 </h2>
-
-                {/* <p className="text-sm mt-2 line-clamp-2">
-                  {item.description}
-                </p> */}
               </div>
 
-              {/* BADGE */}
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 
-              bg-black/40 backdrop-blur-md px-6 py-4  text-white text-center w-[100%] text-xl md:text-2xl font-bold">
+              bg-black/40 backdrop-blur-md px-6 py-4 text-white text-center w-full text-xl md:text-2xl font-bold">
                 New Additions
               </div>
+
             </div>
           </SwiperSlide>
         ))}
