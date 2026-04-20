@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import pb from "../API/api";
+import { cachedRequest } from "../API/cache";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
@@ -11,9 +12,9 @@ function Mainslider() {
   useEffect(() => {
     async function fetchImages() {
       try {
-        const res = await pb.collection("restaurant_images").getFullList({
-          sort: "-created",
-        });
+        const res = await cachedRequest("restaurant_images", () =>
+          pb.collection("restaurant_images").getFullList({ sort: "-created" })
+        );
         setImages(res);
       } catch (error) {
         console.error("Error fetching images:", error);

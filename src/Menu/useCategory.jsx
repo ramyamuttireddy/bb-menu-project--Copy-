@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import pb, { safeRequest } from "../API/api";
+import { throttledRequest } from "../API/cache";
 
 export default function useCategory() {
   const [categories, setCategories] = useState([]);
@@ -19,11 +20,15 @@ export default function useCategory() {
         });
 
         const [catRes, subRes] = await Promise.all([
-          safeRequest(() =>
-            pb.collection("category").getList(1, 50, { sort: "order" })
+          throttledRequest(() =>
+            safeRequest(() =>
+              pb.collection("category").getList(1, 50, { sort: "order" })
+            )
           ),
-          safeRequest(() =>
-            pb.collection("sub_category").getList(1, 100, { sort: "order" })
+          throttledRequest(() =>
+            safeRequest(() =>
+              pb.collection("sub_category").getList(1, 100, { sort: "order" })
+            )
           ),
         ]);
 

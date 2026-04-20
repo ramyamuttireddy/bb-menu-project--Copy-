@@ -1,4 +1,5 @@
 import pb from "../API/api";
+import { cachedRequest } from "../API/cache";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,8 +12,12 @@ const ExploreDishes = () => {
     async function fetchMenu() {
       try {
         const [signature, explore] = await Promise.all([
-          pb.collection("signature_images").getOne("bakxdec5r2k5ikz"),
-          pb.collection("signature_images").getOne("1egp64vjdjll5p9"),
+          cachedRequest("signature_dish", () =>
+            pb.collection("signature_images").getOne("bakxdec5r2k5ikz")
+          ),
+          cachedRequest("explore_menu", () =>
+            pb.collection("signature_images").getOne("1egp64vjdjll5p9")
+          ),
         ]);
         setSignatureDish(signature);
         setExploreMenu(explore);

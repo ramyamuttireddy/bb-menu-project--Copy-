@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import pb from "../API/api";
+import { cachedRequest } from "../API/cache";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
@@ -11,9 +12,9 @@ function NoticeSlider() {
   useEffect(() => {
     async function fetchNotices() {
       try {
-        const res = await pb.collection("notices").getFullList({
-          sort: "-created",
-        });
+        const res = await cachedRequest("notices", () =>
+          pb.collection("notices").getFullList({ sort: "-created" })
+        );
         setNotices(res);
       } catch (error) {
         console.error(error);

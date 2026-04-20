@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import pb from "../API/api";
+import { cachedRequest } from "../API/cache";
 
 export default function useBackground() {
   const [background, setBackground] = useState("");
@@ -7,13 +8,12 @@ export default function useBackground() {
   useEffect(() => {
     const loadBackground = async () => {
       try {
-        const records = await pb
-          .collection("background_wrapper_image")
-          .getFullList({ sort: "order" });
+        const records = await cachedRequest("background_images", () =>
+          pb.collection("background_wrapper_image").getFullList({ sort: "order" })
+        );
 
         if (records.length > 0 && records[0].image) {
           const url = pb.files.getUrl(records[0], records[0].image);
-          console.log("Background URL:", url); // Debug
           setBackground(url);
         }
       } catch (err) {
@@ -26,6 +26,8 @@ export default function useBackground() {
     const unsubscribe = pb
       .collection("background_wrapper_image")
       .subscribe("*", () => {
+        // Clear cache on realtime update so next load fetches fresh
+        localStorage.removeItem("background_images");
         loadBackground();
       });
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import pb, { safeRequest } from "../API/api";
+import { cachedRequest } from "../API/cache";
 
 export default function useMenu(categoryId, subCategoryId) {
   const [items, setItems] = useState([]);
@@ -20,11 +21,15 @@ export default function useMenu(categoryId, subCategoryId) {
           filter += ` && subCategoryId="${subCategoryId}"`;
         }
 
-        const res = await safeRequest(() =>
-          pb.collection("food_item").getList(1, 50, {
-            filter,
-            sort: "order",
-          })
+        const cacheKey = `menu_${categoryId}_${subCategoryId || "all"}`;
+
+        const res = await cachedRequest(cacheKey, () =>
+          safeRequest(() =>
+            pb.collection("food_item").getList(1, 50, {
+              filter,
+              sort: "order",
+            })
+          )
         );
 
         if (!ignore) {
