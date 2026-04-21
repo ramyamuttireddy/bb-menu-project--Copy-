@@ -1,6 +1,6 @@
 import PocketBase from "pocketbase";
 
-const pb = new PocketBase("https://bbirv.pockethost.io");
+const pb = new PocketBase("https://bbirv.bharatbhavan.com");
 
 // 🔥 VERY IMPORTANT
 pb.autoCancellation(false);
