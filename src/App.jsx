@@ -11,11 +11,27 @@ import useBackground from "./hooks/useBackground";
 import { refreshAuth } from "./API/api";
 import ScrollToTop from "./BackArrow/ScrollTop";
 
+import usePullToRefresh from "./hooks/usePullToRefresh";
+
 function App() {
   const backgroundImage = useBackground();
 
   const [loading, setLoading] = useState(true);
   const [showLoader, setShowLoader] = useState(false);
+
+  // 🔥 refresh function
+  const handleRefresh = () => {
+    console.log("Refreshing...");
+    
+    // Option 1: full reload (simple)
+    window.location.reload();
+
+    // Option 2 (better): trigger state refresh
+    // setKey(prev => prev + 1);
+  };
+
+  // 🔥 attach pull-to-refresh
+  usePullToRefresh(handleRefresh);
 
   useEffect(() => {
     if (!backgroundImage) return;
@@ -53,7 +69,6 @@ function App() {
 
       <div className="fixed inset-0 -z-10 bg-black/40" />
 
-      {/* ✅ HASH ROUTER */}
       <HashRouter>
         <ScrollToTop />
         <Header />
